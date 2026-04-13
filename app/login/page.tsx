@@ -43,7 +43,7 @@ function LoginForm() {
       if (result?.error) {
         setError("Email atau password salah");
       } else {
-        router.push("/dashboard");
+        router.push("/dashboard/kitchen");
         router.refresh();
       }
     } catch {

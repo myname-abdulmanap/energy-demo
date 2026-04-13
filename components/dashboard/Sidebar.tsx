@@ -41,8 +41,17 @@ interface SidebarProps {
   user: User;
 }
 
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  roles: string[];
+  selectorValue?: string;
+  children?: NavigationItem[];
+}
+
 // Define navigation items with role-based access
-const navigationItems = [
+const navigationItems: NavigationItem[] = [
   {
     name: "Cashier",
     href: "/dashboard/kitchen",
@@ -208,14 +217,14 @@ export default function Sidebar({ user }: SidebarProps) {
     index,
     collapsed = false,
   }: {
-    item: (typeof navigationItems)[number];
+    item: NavigationItem;
     index: number;
     collapsed?: boolean;
   }) => {
     const Icon = item.icon;
     const { setValue: setHeaderSelector, value: headerValue } =
       useHeaderSelector();
-    const selectorValue = (item as { selectorValue?: string }).selectorValue;
+    const selectorValue = item.selectorValue;
     const isActive =
       item.href &&
       (selectorValue
@@ -224,7 +233,7 @@ export default function Sidebar({ user }: SidebarProps) {
           (item.href !== "/dashboard" && pathname.startsWith(item.href)));
     const hasActiveChild = item.children?.some(
       (child) => {
-        const sv = (child as { selectorValue?: string }).selectorValue;
+        const sv = child.selectorValue;
         return sv
           ? pathname === child.href && headerValue === sv
           : pathname === child.href || pathname.startsWith(child.href);
@@ -334,8 +343,7 @@ export default function Sidebar({ user }: SidebarProps) {
               <div className="ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2">
                 {item.children.map((child, childIndex) => {
                   const ChildIcon = child.icon;
-                  const sv = (child as { selectorValue?: string })
-                    .selectorValue;
+                  const sv = child.selectorValue;
                   const isChildActive = sv
                     ? pathname === child.href && headerValue === sv
                     : pathname === child.href ||

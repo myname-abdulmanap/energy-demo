@@ -24,9 +24,9 @@ export async function middleware(request: NextRequest) {
 
   const isProtectedRoute = pathname.startsWith("/dashboard");
 
-  // If on auth page and already logged in, redirect to dashboard
+  // If on auth page and already logged in, redirect to the main dashboard
   if (isAuthPage && isLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/dashboard/kitchen", request.url));
   }
 
   // If trying to access protected route without being logged in
