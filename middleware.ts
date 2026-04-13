@@ -2,13 +2,18 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+const AUTH_SECRET =
+  process.env.AUTH_SECRET ??
+  process.env.NEXTAUTH_SECRET ??
+  "dev-hardcoded-auth-secret-energy-demo";
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Get the token
   const token = await getToken({ 
     req: request, 
-    secret: process.env.AUTH_SECRET 
+    secret: AUTH_SECRET,
   });
   
   const isLoggedIn = !!token;

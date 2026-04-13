@@ -6,21 +6,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LayoutDashboard,
-  Settings,
-  Users,
-  FileText,
-  Bell,
-  Gauge,
   Fuel,
   X,
   PanelLeftClose,
   PanelLeft,
   ChevronRight,
   ChevronDown,
-  ChefHat,
-  Activity,
-  Plug,
   ScanLine,
   Flame,
   Package,
@@ -53,103 +44,45 @@ interface SidebarProps {
 // Define navigation items with role-based access
 const navigationItems = [
   {
-    name: "Energy Monitor",
-    href: "",
-    icon: LayoutDashboard,
+    name: "Cashier",
+    href: "/dashboard/kitchen",
+    icon: ScanLine,
     roles: ["ADMIN", "OPERATOR", "VIEWER"],
-    children: [
-      {
-        name: "Overview",
-        href: "/dashboard",
-        icon: Activity,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-      },
-      {
-        name: "Power Outlets",
-        href: "/dashboard/electricity",
-        icon: Plug,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-      },
-    ],
+    selectorValue: "cashier-monitoring",
   },
   {
-    name: "AI Monitor",
-    href: "",
-    icon: ChefHat,
+    name: "Kitchen",
+    href: "/dashboard/kitchen",
+    icon: Flame,
     roles: ["ADMIN", "OPERATOR", "VIEWER"],
-    children: [
-      {
-        name: "Cashier",
-        href: "/dashboard/kitchen",
-        icon: ScanLine,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-        selectorValue: "cashier-monitoring",
-      },
-      {
-        name: "Kitchen",
-        href: "/dashboard/kitchen",
-        icon: Flame,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-        selectorValue: "kitchen-monitoring",
-      },
-      {
-        name: "Oil",
-        href: "/dashboard/kitchen",
-        icon: Droplets,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-        selectorValue: "oil-monitoring",
-      },
-      {
-        name: "Jerrycan",
-        href: "/dashboard/kitchen",
-        icon: Package,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-        selectorValue: "jerrycan-monitoring",
-      },
-      {
-        name: "Pooling",
-        href: "/dashboard/kitchen",
-        icon: Droplets,
-        roles: ["ADMIN", "OPERATOR", "VIEWER"],
-        selectorValue: "pooling-monitoring",
-      },
-    ],
+    selectorValue: "kitchen-monitoring",
+  },
+  {
+    name: "Oil",
+    href: "/dashboard/kitchen",
+    icon: Droplets,
+    roles: ["ADMIN", "OPERATOR", "VIEWER"],
+    selectorValue: "oil-monitoring",
+  },
+  {
+    name: "Jerrycan",
+    href: "/dashboard/kitchen",
+    icon: Package,
+    roles: ["ADMIN", "OPERATOR", "VIEWER"],
+    selectorValue: "jerrycan-monitoring",
+  },
+  {
+    name: "Pooling",
+    href: "/dashboard/kitchen",
+    icon: Droplets,
+    roles: ["ADMIN", "OPERATOR", "VIEWER"],
+    selectorValue: "pooling-monitoring",
   },
   {
     name: "Fuel Monitor",
     href: "/dashboard/fuel",
     icon: Fuel,
     roles: ["ADMIN", "OPERATOR", "VIEWER"],
-  },
-  {
-    name: "Perangkat",
-    href: "/dashboard/devices",
-    icon: Gauge,
-    roles: ["ADMIN", "OPERATOR"],
-  },
-  {
-    name: "Laporan",
-    href: "/dashboard/reports",
-    icon: FileText,
-    roles: ["ADMIN", "OPERATOR", "VIEWER"],
-  },
-  {
-    name: "Notifikasi",
-    href: "/dashboard/notifications",
-    icon: Bell,
-    roles: ["ADMIN", "OPERATOR"],
-  },
-  {
-    name: "Pengguna",
-    href: "/dashboard/users",
-    icon: Users,
-    roles: ["ADMIN"],
-  },
-  {
-    name: "Pengaturan",
-    href: "/dashboard/settings",
-    icon: Settings,
-    roles: ["ADMIN"],
   },
 ];
 
@@ -275,22 +208,30 @@ export default function Sidebar({ user }: SidebarProps) {
     index,
     collapsed = false,
   }: {
-    item: (typeof navigationItems)[0];
+    item: (typeof navigationItems)[number];
     index: number;
     collapsed?: boolean;
   }) => {
     const Icon = item.icon;
     const { setValue: setHeaderSelector, value: headerValue } =
       useHeaderSelector();
+    const selectorValue = (item as { selectorValue?: string }).selectorValue;
     const isActive =
       item.href &&
-      (pathname === item.href ||
-        (item.href !== "/dashboard" && pathname.startsWith(item.href)));
+      (selectorValue
+        ? pathname === item.href && headerValue === selectorValue
+        : pathname === item.href ||
+          (item.href !== "/dashboard" && pathname.startsWith(item.href)));
     const hasActiveChild = item.children?.some(
-      (child) => pathname === child.href || pathname.startsWith(child.href),
+      (child) => {
+        const sv = (child as { selectorValue?: string }).selectorValue;
+        return sv
+          ? pathname === child.href && headerValue === sv
+          : pathname === child.href || pathname.startsWith(child.href);
+      },
     );
     const isGroup = !item.href;
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
     const content = isGroup ? (
       <motion.div
@@ -341,7 +282,10 @@ export default function Sidebar({ user }: SidebarProps) {
       >
         <Link
           href={item.href}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            if (selectorValue) setHeaderSelector(selectorValue);
+            setOpen(false);
+          }}
           className={cn(
             "group flex items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
             isActive || hasActiveChild
@@ -509,7 +453,7 @@ export default function Sidebar({ user }: SidebarProps) {
             <div className="space-y-0.5">
               {filteredNavItems.map((item, index) => (
                 <NavItem
-                  key={item.href}
+                  key={`${item.href}-${item.name}`}
                   item={item}
                   index={index}
                   collapsed={isCollapsed}
@@ -613,7 +557,11 @@ export default function Sidebar({ user }: SidebarProps) {
               <nav className="flex-1 overflow-y-auto p-1.5">
                 <div className="space-y-0.5">
                   {filteredNavItems.map((item, index) => (
-                    <NavItem key={item.href} item={item} index={index} />
+                    <NavItem
+                      key={`${item.href}-${item.name}`}
+                      item={item}
+                      index={index}
+                    />
                   ))}
                 </div>
               </nav>

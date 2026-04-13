@@ -141,15 +141,9 @@ function LoginForm() {
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm">
-          <span className="text-muted-foreground">Belum punya akun? </span>
-          <Link
-            href="/register"
-            className="font-semibold text-primary hover:underline"
-          >
-            Daftar sekarang
-          </Link>
-        </div>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Akses akun dikelola oleh administrator.
+        </p>
       </CardContent>
     </Card>
   );

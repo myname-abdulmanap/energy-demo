@@ -453,24 +453,30 @@ export function OilMonitoring() {
   );
 
   return (
-    <Tabs defaultValue="alerts" className="h-full flex flex-col">
-      <TabsList className="w-fit h-7 mb-1">
-        <TabsTrigger value="alerts" className="text-[9px] h-5 px-3">
-          Alerts
-        </TabsTrigger>
-        <TabsTrigger value="overview" className="text-[9px] h-5 px-3">
+    <Tabs defaultValue="overview" className="h-full flex flex-col">
+      <TabsList className="mb-1 h-7 w-fit rounded-md bg-muted/70 p-1">
+        <TabsTrigger
+          value="overview"
+          className="h-5 px-3 text-[9px] data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+        >
           Overview
         </TabsTrigger>
+        <TabsTrigger
+          value="alerts"
+          className="h-5 px-3 text-[9px] data-[state=active]:bg-rose-500 data-[state=active]:text-white"
+        >
+          Alerts
+        </TabsTrigger>
       </TabsList>
+      <TabsContent value="overview" className="flex-1 mt-0">
+        {overviewContent}
+      </TabsContent>
       <TabsContent value="alerts" className="flex-1 mt-0">
         <AlertsView
           alerts={oilAlerts}
           summary={oilDeviceSummary}
           title="Oil / Fryer Alerts"
         />
-      </TabsContent>
-      <TabsContent value="overview" className="flex-1 mt-0">
-        {overviewContent}
       </TabsContent>
     </Tabs>
   );

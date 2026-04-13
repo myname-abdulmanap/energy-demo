@@ -208,7 +208,7 @@ export function AlertsView({ alerts, summary }: AlertsViewProps) {
                       {sectionAlerts.length}
                     </Badge>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-6">
                     {sectionAlerts.map((alert) => (
                       <AIAlertCard
                         key={alert.id}

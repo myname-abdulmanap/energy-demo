@@ -57,49 +57,49 @@ export function AIAlertCard({ alert, onClick }: AIAlertCardProps) {
 
   return (
     <motion.div
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.01, y: -1 }}
+      whileTap={{ scale: 0.99 }}
       className="cursor-pointer"
       onClick={() => onClick(alert)}
     >
       <Card
         className={`border ${config.border} ${config.bg} shadow-sm transition-all h-full`}
       >
-        <CardContent className="p-3 flex flex-col gap-2 h-full">
+        <CardContent className="flex h-full flex-col gap-1.5 p-2">
           {/* Top: Icon + Severity Badge */}
           <div className="flex items-center justify-between">
             <div
-              className={`h-7 w-7 rounded-lg flex items-center justify-center flex-shrink-0 ${config.bg}`}
+              className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md ${config.bg}`}
             >
-              <SeverityIcon className={`h-4 w-4 ${config.text}`} />
+              <SeverityIcon className={`h-3 w-3 ${config.text}`} />
             </div>
             <Badge
               variant="outline"
-              className={`text-[7px] px-1.5 py-0 h-4 ${config.badgeBg}`}
+              className={`h-3 px-1 py-0 text-[6px] ${config.badgeBg}`}
             >
               {alert.severity}
             </Badge>
           </div>
 
           {/* Alert Type */}
-          <p className="text-[10px] font-semibold leading-tight line-clamp-2">
+          <p className="line-clamp-2 text-[8px] font-semibold leading-tight">
             {alert.alertType}
           </p>
 
           {/* Device + Area */}
-          <div className="space-y-1 mt-auto">
-            <div className="flex items-center gap-1 text-[8px] text-muted-foreground">
-              <Camera className="h-2.5 w-2.5 flex-shrink-0" />
+          <div className="mt-auto space-y-0.5">
+            <div className="flex items-center gap-1 text-[7px] text-muted-foreground">
+              <Camera className="h-2 w-2 flex-shrink-0" />
               <span className="font-medium text-foreground">
                 {alert.deviceId}
               </span>
             </div>
-            <div className="flex items-center gap-1 text-[8px] text-muted-foreground">
-              <MapPin className="h-2.5 w-2.5 flex-shrink-0" />
+            <div className="flex items-center gap-1 text-[7px] text-muted-foreground">
+              <MapPin className="h-2 w-2 flex-shrink-0" />
               <span className="truncate">{alert.area}</span>
             </div>
-            <div className="flex items-center gap-1 text-[7px] text-muted-foreground">
-              <Clock className="h-2.5 w-2.5 flex-shrink-0" />
+            <div className="flex items-center gap-1 text-[6px] text-muted-foreground">
+              <Clock className="h-2 w-2 flex-shrink-0" />
               <span>{alert.timestamp.split(" ")[1]}</span>
             </div>
           </div>
