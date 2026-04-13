@@ -1,37 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
-
-const AUTH_SECRET =
-  process.env.AUTH_SECRET ??
-  process.env.NEXTAUTH_SECRET ??
-  "dev-hardcoded-auth-secret-energy-demo";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
-  // Get the token
-  const token = await getToken({ 
-    req: request, 
-    secret: AUTH_SECRET,
-  });
-  
-  const isLoggedIn = !!token;
 
   const isAuthPage =
     pathname.startsWith("/login") ||
     pathname.startsWith("/register");
 
-  const isProtectedRoute = pathname.startsWith("/dashboard");
-
-  // If on auth page and already logged in, redirect to the main dashboard
-  if (isAuthPage && isLoggedIn) {
+  // Bypass auth pages and always go to dashboard.
+  if (isAuthPage) {
     return NextResponse.redirect(new URL("/dashboard/kitchen", request.url));
-  }
-
-  // If trying to access protected route without being logged in
-  if (isProtectedRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
